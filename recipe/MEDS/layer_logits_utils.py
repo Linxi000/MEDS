@@ -261,8 +261,6 @@ def cluster_and_log(
             correctness_arr[i] = -1
     batch.non_tensor_batch["cluster_penalty_correctness"] = correctness_arr 
     
-
-    # 收集所有记录（在分类之后，可以获取 predicted_label 和 cluster_size）
     records = []
     for i in range(len(batch)):
         pid = prompt_indices[i] if i < len(prompt_indices) else None
@@ -278,8 +276,8 @@ def cluster_and_log(
             "brace_pos_in_response": (
                 int(brace_pos_in_response[i]) if brace_pos_in_response[i] is not None else None
             ),
-            "cluster_label": batch_idx_to_label.get(i, None),  # 添加聚类标签
-            "cluster_size": int(cluster_size_per_sample[i]) if i < len(cluster_size_per_sample) else None,  # 添加簇大小
+            "cluster_label": batch_idx_to_label.get(i, None),
+            "cluster_size": int(cluster_size_per_sample[i]) if i < len(cluster_size_per_sample) else None,
             "layer_logits": layer_logits_by_batch_idx.get(i, None),
         }
         records.append(rec)
@@ -292,45 +290,18 @@ def cluster_and_log(
 
 
 def _has_clustered_labels(state: dict) -> bool:
-    """
-    检查 state 是否已经有完整的聚类标签。
-    
-    Args:
-        state: KNN state dictionary with 'vectors' and 'labels' keys
-        
-    Returns:
-        True if labels exist and match vectors length, False otherwise
-    """
     vectors = state.get("vectors", [])
     labels = state.get("labels", [])
     return len(labels) > 0 and len(labels) == len(vectors)
 
 
 def _collect_sample(state: dict, vec_np: np.ndarray) -> None:
-    """
-    收集一个样本到 state 中。
-    
-    Args:
-        state: KNN state dictionary
-        vec_np: Sample vector as numpy array
-    """
     if "vectors" not in state:
         state["vectors"] = []
     state["vectors"].append(vec_np)
 
 
 def _classify_with_knn(state: dict, vec_np: np.ndarray, k: int = 3, metric: str = "cosine") -> int:
-    """
-    使用 K-NN 对新样本进行分类。
-    
-    Args:
-        state: KNN state dictionary with clustered vectors and labels
-        vec_np: New sample vector to classify
-        k: Number of nearest neighbors to consider
-        
-    Returns:
-        Predicted label (majority vote from k nearest neighbors)
-    """
     X = np.stack(state["vectors"], axis=0)
     labels = np.array(state["labels"], dtype=int)
     
@@ -341,18 +312,9 @@ def _classify_with_knn(state: dict, vec_np: np.ndarray, k: int = 3, metric: str 
     nn = NearestNeighbors(n_neighbors=k_actual, metric=metric, algorithm='brute')
     nn.fit(X)
     
-    # 查找最近邻
     distances, indices = nn.kneighbors(vec_np.reshape(1, -1))
     nn_labels = labels[indices[0]]
     
-    # 过滤掉噪声点（-1），只考虑真正的簇
-    # non_noise_mask = nn_labels != -1
-    # if np.sum(non_noise_mask) == 0:
-    #     # 如果所有最近邻都是噪声点，返回 -1 表示该样本也是噪声
-    #     return -1
-    
-    # # 只使用非噪声点的标签进行投票
-    # nn_labels_valid = nn_labels[non_noise_mask]
     unique, counts = np.unique(nn_labels, return_counts=True)
     return int(unique[np.argmax(counts)])
 
@@ -372,16 +334,14 @@ def _cluster_with_hdbscan(
     """
     vectors = state.get("vectors", [])
     if len(vectors) < 2:
-        # 样本数不足，无法形成簇，所有样本标记为噪声点（-1）
-        print(f"HDBSCAN: {len(vectors)} samples < 2, marking as noise")
         state["labels"] = [-1] * len(vectors)
-        state["k"] = 0  # 没有真正的簇
+        state["k"] = 0
         return
     
     X = np.stack(vectors, axis=0)
     X_used = normalize(X, norm='l2')
 
-    # HDBSCAN 聚类
+    # HDBSCAN
     clusterer = hdbscan.HDBSCAN(
         min_cluster_size=min_cluster_size,
         min_samples=1,

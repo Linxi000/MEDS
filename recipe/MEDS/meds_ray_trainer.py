@@ -45,9 +45,9 @@ from verl.trainer.ppo.reward import compute_reward
 from verl.utils.profiler import marked_timer
 from verl.utils.rollout_skip import RolloutSkip
 
-from extract_layer_logits import prepare_layer_logits_analysis
+from .extract_layer_logits import prepare_layer_logits_analysis
 
-from layer_logits_utils import cluster_and_log
+from .layer_logits_utils import cluster_and_log
 
 class RayMEDSTrainer(RayPPOTrainer):
     """
