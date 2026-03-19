@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-project_name='mem_reward'
-exp_name='naiveDAPO'
+project_name='MEDS'
+exp_name='dapo'
 
-adv_estimator=grpo_cluster
+adv_estimator=MEDS
 cluster_method="hdbscan_knn"
 
 use_kl_in_reward=False
