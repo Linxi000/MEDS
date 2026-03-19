@@ -37,11 +37,11 @@ WORKING_DIR=${WORKING_DIR:-"${PWD}"}
 RUNTIME_ENV=${RUNTIME_ENV:-"${WORKING_DIR}/verl/trainer/runtime_env.yaml"}
 NNODES=${NNODES:-1}
 # Paths
-RAY_DATA_HOME=${RAY_DATA_HOME:-"${HOME}/bwang/Reward_RL"}
+RAY_DATA_HOME=${RAY_DATA_HOME:-"${HOME}/MEDS"}
 MODEL_PATH=${MODEL_PATH:-"${HOME}/models/Qwen2.5-Math-7B"}
 CKPTS_DIR=${CKPTS_DIR:-"${HOME}/ckpts/${project_name}/${exp_name}"}
-TRAIN_FILE=${TRAIN_FILE:-"${HOME}/data/unified_math_dapo_mathformat.parquet"}
-TEST_FILE=${TEST_FILE:-"${HOME}/data/AIME_2024/aime-2024-math.parquet"}
+TRAIN_FILE=${TRAIN_FILE:-"${HOME}/data/unified_math.parquet"}
+TEST_FILE=${TEST_FILE:-"${HOME}/data/aime-2024.parquet"}
 
 # Algorithm
 temperature=1.0
