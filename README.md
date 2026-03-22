@@ -1,10 +1,10 @@
-# MEDS: Clustering-Based Diversity Enhancement for LLM Training
+# The Past Is Not Past: Memory-Enhanced Dynamic Reward Shaping
 
 MEDS (Maximizing Exploration via Diversity Sampling) is a reinforcement learning recipe built on [veRL](https://github.com/volcengine/verl) for training Large Language Models (LLMs) with enhanced exploration through clustering-based diversity optimization.
 
 ## Overview
 
-MEDS extends standard PPO (Proximal Policy Optimization) training by incorporating hidden state clustering to encourage diverse exploration during training. It extracts layer-wise hidden states, applies clustering algorithms (HDBSCAN, HDBSCAN-KNN), and computes diversity-based rewards to improve model exploration.
+MEDS extends standard DAPO training by incorporating hidden state clustering to encourage diverse exploration during training. It extracts layer-wise hidden states, applies clustering algorithms HDBSCAN, and computes diversity-based rewards to improve model exploration.
 
 ## Key Features
 
