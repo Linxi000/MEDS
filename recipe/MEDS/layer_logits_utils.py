@@ -1,4 +1,5 @@
 
+import hashlib
 import json
 import os
 import numpy as np
@@ -6,6 +7,69 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import normalize
 from verl import DataProto
 import hdbscan
+
+
+def _extract_question(self, prompt_str: str) -> str:
+    """从完整 prompt 中提取数学问题的核心内容"""
+    # 尝试多种提取模式
+    extraction_patterns = [
+        # 模式1: DeepSeek 风格
+        (
+            r"Solve the following math problem step by step[^\n]*\n\n(.*?)\n\nRemember to put your answer",
+            re.DOTALL
+        ),
+        # 模式2: 简单的 User/Assistant 格式
+        (
+            r"<\|User\|>(.*?)<\|Assistant\|>",
+            re.DOTALL
+        ),
+        # 模式3: [INST] 格式
+        (
+            r"\[INST\](.*?)\[/INST\]",
+            re.DOTALL
+        ),
+    ]
+    
+    for pattern, flags in extraction_patterns:
+        match = re.search(pattern, prompt_str, flags)
+        if match:
+            return match.group(1).strip()
+    
+    # 如果所有模式都不匹配，尝试简单的标记提取
+    start_marker = "Solve the following math problem step by step"
+    end_marker = "Remember to put your answer"
+    
+    if start_marker in prompt_str:
+        parts = prompt_str.split(start_marker, 1)
+        if len(parts) > 1:
+            question_part = parts[1]
+            if end_marker in question_part:
+                return question_part.split(end_marker)[0].strip()
+            return question_part.strip()
+    
+    # 最后兜底：移除常见模板标记
+    cleaned = re.sub(r'<[^>]+>', '', prompt_str)
+    cleaned = re.sub(r'\[/?INST\]', '', cleaned)
+    cleaned = cleaned.strip()
+    
+    if len(cleaned) < 10:
+        return prompt_str.strip()
+    
+    return cleaned
+
+def _normalize_text(self, text: str) -> str:
+    """规范化文本，确保相同问题生成相同 hash"""
+    text = re.sub(r'\s+', ' ', text)
+    text = text.strip()
+    text = text.replace('\r\n', '\n').replace('\r', '\n')
+    return text
+
+def _compute_prompt_hash(prompt_text: str) -> str:
+    """Compute a stable hash for a prompt using MD5."""
+    question_text = _extract_question(prompt_text)
+    normalized = _normalize_text(question_text)
+    return hashlib.md5(normalized.encode('utf-8')).hexdigest()[:16]
+
 
 def ensure_step_dir(config, global_steps: int, epoch_idx: int) -> tuple[str, str]:
     root_dir = config.trainer.get(
@@ -122,7 +186,7 @@ def cluster_and_log(
     prompt_indices = []
     for idx, prompt_text in enumerate(prompts_text):
         if prompt_text not in prompt_index_map:
-            prompt_index_map[prompt_text] = abs(hash(prompt_text)) % (10 ** 8)
+            prompt_index_map[prompt_text] = _compute_prompt_hash(prompt_text)
         prompt_indices.append(prompt_index_map[prompt_text])
     
     batch_size = len(batch)

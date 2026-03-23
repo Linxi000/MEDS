@@ -25,3 +25,4 @@ latex2sympy2_extended
 math_verify
 tensorboard
 hdbscan
+hashlib
