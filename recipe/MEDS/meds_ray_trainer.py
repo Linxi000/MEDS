@@ -276,7 +276,7 @@ class RayMEDSTrainer(RayPPOTrainer):
                             traj_bsz = self.config.data.train_batch_size * self.config.actor_rollout_ref.rollout.n
                             batch = batch[:traj_bsz]
 
-                    # === Updating===
+                    # === Updating ===
 
                     batch.batch["response_mask"] = compute_response_mask(batch)
 
