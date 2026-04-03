@@ -10,10 +10,7 @@ import hdbscan
 import re
 
 def _extract_question(prompt_str: str) -> str:
-    """从完整 prompt 中提取数学问题的核心内容"""
-    # 尝试多种提取模式
     extraction_patterns = [
-        # 模式1: DeepSeek 风格
         (
             r"Solve the following math problem step by step[^\n]*\n\n(.*?)\n\nRemember to put your answer",
             re.DOTALL
@@ -35,7 +32,6 @@ def _extract_question(prompt_str: str) -> str:
         if match:
             return match.group(1).strip()
     
-    # 如果所有模式都不匹配，尝试简单的标记提取
     start_marker = "Solve the following math problem step by step"
     end_marker = "Remember to put your answer"
     
@@ -47,7 +43,6 @@ def _extract_question(prompt_str: str) -> str:
                 return question_part.split(end_marker)[0].strip()
             return question_part.strip()
     
-    # 最后兜底：移除常见模板标记
     cleaned = re.sub(r'<[^>]+>', '', prompt_str)
     cleaned = re.sub(r'\[/?INST\]', '', cleaned)
     cleaned = cleaned.strip()
@@ -58,14 +53,12 @@ def _extract_question(prompt_str: str) -> str:
     return cleaned
 
 def _normalize_text(text: str) -> str:
-    """规范化文本，确保相同问题生成相同 hash"""
     text = re.sub(r'\s+', ' ', text)
     text = text.strip()
     text = text.replace('\r\n', '\n').replace('\r', '\n')
     return text
 
 def _compute_prompt_hash(prompt_text: str) -> str:
-    """Compute a stable hash for a prompt using MD5."""
     question_text = _extract_question(prompt_text)
     normalized = _normalize_text(question_text)
     return hashlib.md5(normalized.encode('utf-8')).hexdigest()[:16]
