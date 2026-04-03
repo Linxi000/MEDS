@@ -1,29 +1,28 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-project_name='MEDS'
-exp_name='dapo'
+project_name='mem_reward'
+exp_name='unique_dapo_1_7b_baseline_entropy'
 
-adv_estimator=MEDS
-cluster_method="hdbscan"
+adv_estimator=grpo
 
 use_kl_in_reward=False
 kl_coef=0.0
-use_kl_loss=False
-kl_loss_coef=0.0
+use_kl_loss=True
+kl_loss_coef=0.001
 
 clip_ratio_low=0.2
-clip_ratio_high=0.28
+clip_ratio_high=0.2
 
 max_prompt_length=1024
-max_response_length=3072
-enable_overlong_buffer=True
+max_response_length=7168
+enable_overlong_buffer=False
 overlong_buffer_len=512
 overlong_penalty_factor=1.0
 
-loss_agg_mode="token-mean"
+loss_agg_mode="seq-mean-token-mean"
 
-enable_filter_groups=True
+enable_filter_groups=False
 filter_groups_metric=acc
 max_num_gen_batches=10
 train_prompt_bsz=512
@@ -31,24 +30,18 @@ gen_prompt_bsz=512
 train_prompt_mini_bsz=16
 n_resp_per_prompt=16
 
-penalty_coef=0.1
-use_layer_diff=False
-use_last_n_layers=14
-cluster_penalty_target="none" # "wrong", "right", "both", "none"
-
 # Ray
-RAY_ADDRESS=${RAY_ADDRESS:-"http://localhost:8265"}
+# RAY_ADDRESS=${RAY_ADDRESS:-"http://localhost:8265"}
+export RAY_API_SERVER_ADDRESS="${RAY_ADDRESS}"
 WORKING_DIR=${WORKING_DIR:-"${PWD}"}
 RUNTIME_ENV=${RUNTIME_ENV:-"${WORKING_DIR}/verl/trainer/runtime_env.yaml"}
-NNODES=${NNODES:-1}
-
+NNODES=${NNODES:-4}
 # Paths
-RAY_DATA_HOME=${RAY_DATA_HOME:-"${HOME}/MEDS"}
-MODEL_PATH=${MODEL_PATH:-"${HOME}/models/Qwen2.5-Math-7B"}
-CKPTS_DIR=${CKPTS_DIR:-"${HOME}/ckpts/${project_name}/${exp_name}"}
-TRAIN_FILE=${TRAIN_FILE:-"${HOME}/data/unified_math.parquet"}
-TEST_FILE=${TEST_FILE:-"${HOME}/data/aime-2024.parquet"}
-
+RAY_DATA_HOME=${RAY_DATA_HOME:-"${HOME}/Reward_RL"}
+MODEL_PATH=${MODEL_PATH:-"/inspire/qb-ilm/project/exploration-topic/public/bwang/models/Qwen3-1.7B"}
+CKPTS_DIR=${CKPTS_DIR:-"/inspire/qb-ilm/project/exploration-topic/public/bwang/ckpts/${project_name}/${exp_name}"}
+TRAIN_FILE=${TRAIN_FILE:-"/inspire/hdd/project/exploration-topic/public/bwang/data/unified_math_25k_new_unique.parquet"}
+TEST_FILE=${TEST_FILE:-"/inspire/hdd/project/exploration-topic/public/bwang/data/AIME_2024/aime-2024_new.parquet"}
 
 # Algorithm
 temperature=1.0
@@ -63,7 +56,7 @@ offload=False
 
 ray job submit --no-wait --runtime-env="${RUNTIME_ENV}" \
     --working-dir "${WORKING_DIR}" \
-    -- python3 -m recipe.MEDS.main_meds \
+    -- python3 -m recipe.dapo.main_dapo \
     data.train_files="${TRAIN_FILE}" \
     data.val_files="${TEST_FILE}" \
     data.prompt_key=prompt \
@@ -137,8 +130,4 @@ ray job submit --no-wait --runtime-env="${RUNTIME_ENV}" \
     trainer.total_epochs=100 \
     trainer.default_local_dir="${CKPTS_DIR}" \
     trainer.resume_mode=disable \
-    +trainer.cluster_method=${cluster_method} \
-    +trainer.clustering.use_layer_diff=${use_layer_diff} \
-    +trainer.clustering.use_last_n_layers=${use_last_n_layers} \
-    +trainer.clustering.cluster_penalty_target=${cluster_penalty_target} \
-    +algorithm.penalty_coef=${penalty_coef}
+    trainer.rollout_data_dir="/inspire/qb-ilm/project/exploration-topic/public/bwang/rollout/${exp_name}" \
