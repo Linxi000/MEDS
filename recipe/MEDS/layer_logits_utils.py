@@ -7,7 +7,7 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import normalize
 from verl import DataProto
 import hdbscan
-
+import re
 
 def _extract_question(prompt_str: str) -> str:
     """从完整 prompt 中提取数学问题的核心内容"""
