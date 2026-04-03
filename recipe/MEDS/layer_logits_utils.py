@@ -9,7 +9,7 @@ from verl import DataProto
 import hdbscan
 
 
-def _extract_question(self, prompt_str: str) -> str:
+def _extract_question(prompt_str: str) -> str:
     """从完整 prompt 中提取数学问题的核心内容"""
     # 尝试多种提取模式
     extraction_patterns = [
@@ -57,7 +57,7 @@ def _extract_question(self, prompt_str: str) -> str:
     
     return cleaned
 
-def _normalize_text(self, text: str) -> str:
+def _normalize_text(text: str) -> str:
     """规范化文本，确保相同问题生成相同 hash"""
     text = re.sub(r'\s+', ' ', text)
     text = text.strip()
