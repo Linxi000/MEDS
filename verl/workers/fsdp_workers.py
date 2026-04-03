@@ -959,31 +959,27 @@ class ActorRolloutRefWorker(Worker, DistProfilerExtension):
             
             all_layer_logits = None
             all_batch_indices = None
-            assert hasattr(data, 'meta_info') and data.meta_info is not None, "data.meta_info should not be None when compute_log_prob"
+            if hasattr(data, 'meta_info') and data.meta_info is not None:
+                all_layer_logits = data.meta_info.get("layer_logits", None)
+                all_batch_indices = data.meta_info.get("layer_logits_batch_indices", None)
 
-            all_layer_logits = data.meta_info.get("layer_logits", None)
-            all_batch_indices = data.meta_info.get("layer_logits_batch_indices", None)
-            
-            data.meta_info.pop("layer_logits", None)
-            data.meta_info.pop("layer_logits_batch_indices", None)
-            
+                data.meta_info.pop("layer_logits", None)
+                data.meta_info.pop("layer_logits_batch_indices", None)
+
             non_tensor_batch = {}
             
-            assert all_layer_logits is not None, "Expected layer_logits in data.meta_info"
-            assert all_batch_indices is not None, "Expected layer_logits_batch_indices in data.meta_info"
-
-
-            if data.batch is not None and hasattr(data.batch, 'batch_size'):
-                batch_size = int(data.batch.batch_size[0])
-            else:
-                batch_size = output.shape[0] if isinstance(output, torch.Tensor) else len(output)
-            
-            layer_logits_array = [None] * batch_size
-            for logits_idx, batch_idx in enumerate(all_batch_indices):
-                if logits_idx < len(all_layer_logits) and 0 <= batch_idx < batch_size:
-                    layer_logits_array[batch_idx] = all_layer_logits[logits_idx]
-            
-            non_tensor_batch["layer_logits"] = np.fromiter(layer_logits_array, dtype=object)
+            if all_layer_logits is not None and all_batch_indices is not None:
+                if data.batch is not None and hasattr(data.batch, 'batch_size'):
+                    batch_size = int(data.batch.batch_size[0])
+                else:
+                    batch_size = output.shape[0] if isinstance(output, torch.Tensor) else len(output)
+                
+                layer_logits_array = [None] * batch_size
+                for logits_idx, batch_idx in enumerate(all_batch_indices):
+                    if logits_idx < len(all_layer_logits) and 0 <= batch_idx < batch_size:
+                        layer_logits_array[batch_idx] = all_layer_logits[logits_idx]
+                
+                non_tensor_batch["layer_logits"] = np.fromiter(layer_logits_array, dtype=object)
             
             output = DataProto.from_dict(
                 tensors={"old_log_probs": output, "entropys": entropys},

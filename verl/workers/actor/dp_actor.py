@@ -397,22 +397,21 @@ class DataParallelPPOActor(BasePPOActor):
             micro_local_indices: List[int] = []
             micro_batch_indices: List[int] = []
             
-            assert brace_pos_abs is not None, "brace_pos_absolute must be provided"
-            assert acc_arr is not None, "acc must be provided"
-            mb_size = len(micro_batch)
-            for local_idx in range(mb_size):
-                brace_pos = int(brace_pos_abs[local_idx])
-                is_correct = bool(float(acc_arr[local_idx]) >= 0.5)
-                if brace_pos >= 0:
-                    need_extract_logits = True
-                    micro_local_indices.append(local_idx)
-                    predict_positions.append(brace_pos)
+            if brace_pos_abs is not None and acc_arr is not None:
+                mb_size = len(micro_batch)
+                for local_idx in range(mb_size):
+                    brace_pos = int(brace_pos_abs[local_idx])
+                    is_correct = bool(float(acc_arr[local_idx]) >= 0.5)
+                    if brace_pos >= 0:
+                        need_extract_logits = True
+                        micro_local_indices.append(local_idx)
+                        predict_positions.append(brace_pos)
 
-                    if use_dynamic_bsz:
-                        batch_idx = int(batch_idx_list[micro_batch_idx][local_idx])
-                    else:
-                        batch_idx = global_idx_offset + local_idx
-                    micro_batch_indices.append(batch_idx)
+                        if use_dynamic_bsz:
+                            batch_idx = int(batch_idx_list[micro_batch_idx][local_idx])
+                        else:
+                            batch_idx = global_idx_offset + local_idx
+                        micro_batch_indices.append(batch_idx)
             
             with torch.no_grad():
                 entropy, log_probs, micro_layer_logits = self._forward_micro_batch(
