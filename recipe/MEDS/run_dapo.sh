@@ -42,6 +42,9 @@ CKPTS_DIR=${CKPTS_DIR:-"${HOME}/ckpts/${project_name}/${exp_name}"}
 TRAIN_FILE=${TRAIN_FILE:-"${HOME}/data/unified_math.parquet"}
 TEST_FILE=${TEST_FILE:-"${HOME}/data/aime-2024.parquet"}
 
+ROLLOUT_DATA_DIR=${ROLLOUT_DATA_DIR:-"${HOME}/rollout/${project_name}/${exp_name}"}
+
+
 # Algorithm
 temperature=1.0
 top_p=1.0
@@ -129,4 +132,4 @@ ray job submit --no-wait --runtime-env="${RUNTIME_ENV}" \
     trainer.total_epochs=100 \
     trainer.default_local_dir="${CKPTS_DIR}" \
     trainer.resume_mode=disable \
-    trainer.rollout_data_dir="/inspire/qb-ilm/project/exploration-topic/public/bwang/rollout/${exp_name}" \
+    trainer.rollout_data_dir="${ROLLOUT_DATA_DIR}" \
