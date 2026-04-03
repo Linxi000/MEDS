@@ -23,7 +23,7 @@ from typing import Any, Dict, List
 
 import pandas as pd
 
-from verl.utils.reward_score.math import last_boxed_only_string, remove_boxed
+from verl.utils.reward_score.math_dapo import last_boxed_only_string, remove_boxed
 
 
 def extract_solution(solution_str: str) -> str:
