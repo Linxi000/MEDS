@@ -2,12 +2,13 @@
 
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&duration=1&pause=9999999&color=3F335F&center=true&vCenter=true&repeat=false&width=620&height=26&lines=%E2%AD%90+If+you+like+this+project%2C+give+it+a+star%21+%E2%AD%90" alt="Give it a star" />
-  <br><br>
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=15&duration=1&pause=9999999&color=3F335F&center=true&vCenter=true&repeat=false&width=620&height=26&lines=%E2%AD%90+If+you+like+this+project%2C+give+it+a+star%21+%E2%AD%90" alt="Give it a star" />
 
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=22&duration=3000&pause=1000&color=8A7FB8&center=true&vCenter=true&width=900&lines=Powered+by+OpenMOSS;From+Fudan+University+%26+Shanghai+Innovation+Institution" alt="Typing SVG" />
-  <br><br>
+  <br>
 
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=26&duration=3000&pause=1000&color=8A7FB8&center=true&vCenter=true&width=900&height=120&lines=Powered+by+OpenMOSS;From+Fudan+University+%26+Shanghai+Innovation+Institution" alt="Typing SVG" />
+  <br>
+  
   <a href="http://arxiv.org/abs/2604.11297">
     <img src="https://img.shields.io/badge/Paper-arXiv%3A2604.11297-b31b1b" alt="Paper">
   </a>
@@ -16,6 +17,7 @@
   <img src="https://img.shields.io/badge/Paper-%F0%9F%A4%97%20Hugging%20Face-FFD21E" alt="Hugging Face Paper">
   </a>
 </p>
+
 
 ## Overview
 <div align="center">
