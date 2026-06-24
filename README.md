@@ -16,6 +16,11 @@
   <a href="https://huggingface.co/papers/2604.11297">
   <img src="https://img.shields.io/badge/Paper-%F0%9F%A4%97%20Hugging%20Face-FFD21E" alt="Hugging Face Paper">
   </a>
+
+  <br>
+
+  <img src="https://img.shields.io/badge/🏆%20Hugging%20Face%20Daily%20Papers-Top%201-gold" alt="Hugging Face Daily Papers Top 1">
+  
 </p>
 
 
