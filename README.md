@@ -1,13 +1,10 @@
-<img src="https://capsule-render.vercel.app/api?type=waving&height=265&text=The%20Past%20Is%20Not%20Past&desc=Memory-Enhanced%20Dynamic%20Reward%20Shaping&fontAlign=50&fontAlignY=32&fontSize=47&descAlign=50&descAlignY=58&descSize=36&color=0:AAB7CB,33:739CCF,66:76AEA4,100:C0BC90&fontColor=FFFFFF" />
-
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=220&text=The%20Past%20Is%20Not%20Past&desc=Memory-Enhanced%20Dynamic%20Reward%20Shaping&fontAlign=50&fontAlignY=25&fontSize=40&descAlign=50&descAlignY=46&descSize=28&color=0:AAB7CB,33:739CCF,66:76AEA4,100:C0BC90&fontColor=FFFFFF" alt="The Past Is Not Past" />
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=15&duration=1&pause=9999999&color=3F335F&center=true&vCenter=true&repeat=false&width=620&height=26&lines=%E2%AD%90+If+you+like+this+project%2C+give+it+a+star%21+%E2%AD%90" alt="Give it a star" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=14&duration=1&pause=9999999&color=3F335F&center=true&vCenter=true&repeat=false&width=620&height=24&lines=%E2%AD%90+If+you+like+this+project%2C+give+it+a+star%21+%E2%AD%90" alt="Give it a star" />
 
-  <br>
 
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=26&duration=3000&pause=1000&color=8A7FB8&center=true&vCenter=true&width=900&height=120&lines=Powered+by+OpenMOSS;From+Fudan+University+%26+Shanghai+Innovation+Institution" alt="Typing SVG" />
-  <br>
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=20&duration=3000&pause=1000&color=8A7FB8&center=true&vCenter=true&width=900&height=60&lines=Powered+by+OpenMOSS;From+Fudan+University+%26+Shanghai+Innovation+Institution" alt="Typing SVG" />
   
   <a href="http://arxiv.org/abs/2604.11297">
     <img src="https://img.shields.io/badge/Paper-arXiv%3A2604.11297-b31b1b" alt="Paper">
@@ -17,11 +14,13 @@
   <img src="https://img.shields.io/badge/Paper-%F0%9F%A4%97%20Hugging%20Face-FFD21E" alt="Hugging Face Paper">
   </a>
 
-  <br>
 
-  <img src="https://img.shields.io/badge/🏆%20Hugging%20Face%20Daily%20Papers-Top%201-gold" alt="Hugging Face Daily Papers Top 1">
-  
 </p>
+
+## News
+
+- 🏆 [2026-04] Our paper ranked **#1 on Hugging Face Daily Papers**!
+- 🎉 [2026-04] Our paper has been accepted to **EMNLP 2026 Main Conference**!
 
 
 ## Overview
